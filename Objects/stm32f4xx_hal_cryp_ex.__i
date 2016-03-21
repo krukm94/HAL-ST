@@ -1,6 +1,0 @@
--c --cpu Cortex-M4.fp -g -O0 --apcs=interwork --split_sections -I.\STM32F4xx_HAL_Driver\Inc -I.\STM32F4xx_HAL_Driver\Inc\Legacy -I.\CMSIS\Device -I.\CMSIS\Include -I.\source
--I "D:\STM32\Keil_projects\STM32F4\Projects on ST HAL\HAL-ST\RTE"
--I C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0
--I C:\Keil_v5\ARM\CMSIS\Include
--D__UVISION_VERSION="514" -DSTM32F407xx -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F4XX -DSTM32F4_DISCOVERY -DSTM32F4
--o .\objects\stm32f4xx_hal_cryp_ex.o --omf_browse .\objects\stm32f4xx_hal_cryp_ex.crf --depend .\objects\stm32f4xx_hal_cryp_ex.d "STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_cryp_ex.c"

@@ -1,5 +1,4 @@
 #include "init.h"
-#include "dac.h"
 
 uint16_t duty = 0;   																														
 

@@ -1,6 +1,0 @@
---cpu Cortex-M4.fp -g --apcs=interwork 
--I "D:\STM32\Keil_projects\STM32F4\Projects on ST HAL\HAL-ST\RTE"
--I C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0
--I C:\Keil_v5\ARM\CMSIS\Include
---pd "__UVISION_VERSION SETA 514" --pd "STM32F407xx SETA 1"
---list .\listings\startup_stm32f407xx.lst --xref -o .\objects\startup_stm32f407xx.o --depend .\objects\startup_stm32f407xx.d "CMSIS\Device\startup_stm32f407xx.s"
