@@ -11,6 +11,7 @@
 #include "test.h"
 #include "uart.h"
 #include "dac.h"
+#include "adc.h"
 
 //=============================================================================================
 void init(void);

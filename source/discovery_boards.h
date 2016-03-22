@@ -28,6 +28,28 @@
 #define DAC_DMA_IRQn1                   	DMA1_Stream5_IRQn
 #define DAC_DMA_IRQHandler1             	DMA1_Stream5_IRQHandler
 
+/* Definition for ADC clock resourses */
+#define ADC1_CLK_ENABLE() 								__HAL_RCC_ADC1_CLK_ENABLE()
+#define ADC1_GPIO_CLK_ENABLE()						__HAL_RCC_GPIOA_CLK_ENABLE()
+
+/* Definition resolution and V_REF of ADC  
+Example: if your resolution is 12b you mast set RESOLUTION 4096 it's logic!
+*/
+#define RESOLUTION												4096
+#define V_REF															2.96
+
+
+/* Definition for USART clock resources */
+#define USARTx_CLK_ENABLE()								__HAL_RCC_USART2_CLK_ENABLE();
+
+/* Definition for USART GPIO clock resourses */
+#define USARTx_GPIO_CLK_ENABLE()					__HAL_RCC_GPIOA_CLK_ENABLE();
+
+/* Definition Interrups for USARTS */
+#define USART_IT_RX_ON										0
+
+
+
 #endif
 
 //=============================================================================================
