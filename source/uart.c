@@ -11,7 +11,7 @@
 #include "uart.h"
 
 // TYPEdef's and Handles
-UART_HandleTypeDef USART_HandleStruct;
+UART_HandleTypeDef UART_handle;
 
 //=============================================================================================
 uint8_t usart_init(USART_TypeDef 	*USARTx,
@@ -29,58 +29,58 @@ uint8_t usart_init(USART_TypeDef 	*USARTx,
 	
 	usart_status = 0x01;
  
-/* Enable GPIO clock */
+	/* Enable GPIO clock */
 	USARTx_GPIO_CLK_ENABLE();
 
-// Enable clock for USART1 peripheral
+	// Enable clock for USART1 peripheral
 	USARTx_CLK_ENABLE();
 	
 
 	
-/* Configure USART Tx as alternate function */
-		GPIO_InitStruct.Pin = USART_PIN_TX;
-		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-		GPIO_InitStruct.Pull = GPIO_NOPULL;
-		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
-		GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
-		HAL_GPIO_Init(GPIOx, &GPIO_InitStruct);
+	/* Configure USART Tx as alternate function */
+	GPIO_InitStruct.Pin = USART_PIN_TX;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+	GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+	HAL_GPIO_Init(GPIOx, &GPIO_InitStruct);
 	
-/* Configure USART Rx as alternate function */
-		GPIO_InitStruct.Pin = USART_PIN_RX;
-		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-		GPIO_InitStruct.Pull = GPIO_NOPULL;
-		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
-		GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
-		HAL_GPIO_Init(GPIOx, &GPIO_InitStruct);
-		//Priorytet przerwania
+	/* Configure USART Rx as alternate function */
+	GPIO_InitStruct.Pin = USART_PIN_RX;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+	GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+	HAL_GPIO_Init(GPIOx, &GPIO_InitStruct);
+	//Priorytet przerwania
 		
-		NVIC_SetPriority(USART2_IRQn, 2);
+	NVIC_SetPriority(USART2_IRQn, 2);
 
-		NVIC_EnableIRQ(USART2_IRQn);
+	NVIC_EnableIRQ(USART2_IRQn);
 
-//Handle
-		USART_HandleStruct.Instance = USARTx;
-		USART_HandleStruct.Init.BaudRate = BAUDRATE;
-		USART_HandleStruct.Init.StopBits = USART_STOPBITS_1;
-		USART_HandleStruct.Init.Parity = USART_PARITY_NONE;
-		USART_HandleStruct.Init.Mode = USART_MODE_TX_RX;
+	//UART handle
+	UART_handle.Instance = USARTx;
+	UART_handle.Init.BaudRate = BAUDRATE;
+	UART_handle.Init.StopBits = USART_STOPBITS_1;
+	UART_handle.Init.Parity = USART_PARITY_NONE;
+	UART_handle.Init.Mode = USART_MODE_TX_RX;
 		
 	
-//Init
-		usart_status = HAL_UART_Init(&USART_HandleStruct);
+	//Init
+	usart_status = HAL_UART_Init(&UART_handle);
 	
 		
-//USART2 enable	
-		__HAL_UART_ENABLE(&USART_HandleStruct);
+	//USART2 enable	
+	__HAL_UART_ENABLE(&UART_handle);
 
-			#ifdef USART_IT_RX_ON
+	#ifdef USART_IT_RX_ON
 			USART1 -> CR1 |= USART_CR1_RXNEIE;
-			#endif
+	#endif
 			
 			
-			usart_WriteS("\n\r\n\r---> USART INIT OK <---\n\r\n\r");
+	usart_WriteS("\n\r\n\r---> USART INIT OK <---\n\r\n\r");
 			
-		return usart_status;
+	return usart_status;
 }
 /* ==================================================================================================================================
 
@@ -89,7 +89,7 @@ uint8_t usart_init(USART_TypeDef 	*USARTx,
  ====================================================================================================================================
  */
 void usart_Write(char data){	
-	while(!(__HAL_USART_GET_FLAG(&USART_HandleStruct, USART_FLAG_TXE)));	
+	while(!(__HAL_USART_GET_FLAG(&UART_handle, USART_FLAG_TXE)));	
 		//HAL_UART_Transmit(&USART_HandleStruct,(uint8_t*) data, 8 , 100); <--- TO KURESTWO NIE DZIALA
 	USART2 -> DR = data;
 } //void usart_Write(char data)
@@ -102,7 +102,7 @@ void usart_Write(char data){
 void usart_WriteS(char *s){
 	while(*s)
 	{
-		while(!(__HAL_USART_GET_FLAG(&USART_HandleStruct, USART_FLAG_TC)));
+		while(!(__HAL_USART_GET_FLAG(&UART_handle, USART_FLAG_TC)));
 		usart_Write(*s++);
 		
 	}
