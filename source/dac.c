@@ -115,7 +115,6 @@ static void TIM6_Config(void)
   TIM_MasterConfigTypeDef 		sMasterConfig;
   
   /*##-1- Configure the TIM peripheral #######################################*/
-  /* Time base configuration */
   tim.Instance = TIM6;
   
   tim.Init.Period = (uint16_t)TIM_PERIOD;          
@@ -146,14 +145,8 @@ void DAC1_Config(void)
 	TIM6_Config();
 	
 	/* Select proper GPIO pin */
-	if (DACx == DAC_Channel_1) 
-	{
-		GPIO_Pin = GPIO_PIN_4;
-	} 
-	else 
-	{
-		GPIO_Pin = GPIO_PIN_5;
-	}
+	if (DACx == DAC_Channel_1) GPIO_Pin = GPIO_PIN_4;
+	else GPIO_Pin = GPIO_PIN_5;
 	
 	/* clock enable */
 	__HAL_RCC_DAC_CLK_ENABLE();
@@ -180,12 +173,12 @@ void DAC1_Config(void)
   
   /*##-2- Enable DAC Channel1 and associated DMA #############################*/
   HAL_DAC_Start_DMA(&DAC_Handle, DAC_CHANNEL_1, (uint32_t*)function, SINE_RES, DAC_ALIGN_12B_R);
-}
+} //void DAC1_Config(void)
 
 //=============================================================================================
 void HAL_DAC_MspInit(DAC_HandleTypeDef* hdac)
 {
-  static DMA_HandleTypeDef  hdma_dac1;
+  static DMA_HandleTypeDef  dmaDAC_handle;
   
   /*##-1- Enable peripherals and GPIO Clocks #################################*/
   /* DAC Periph clock enable */
@@ -193,34 +186,33 @@ void HAL_DAC_MspInit(DAC_HandleTypeDef* hdac)
  /* DMA1 clock enable */
   DMAx_CLK_ENABLE();
   
-  
   /*##-3- Configure the DMA streams ##########################################*/
   /* Set the parameters to be configured for Channel1*/
-  hdma_dac1.Instance = DAC_DMA_STREAM1;
+  dmaDAC_handle.Instance = DAC_DMA_STREAM1;
   
-  hdma_dac1.Init.Channel  = DAC_DMA_CHANNEL1;
-  hdma_dac1.Init.Direction = DMA_MEMORY_TO_PERIPH;
-  hdma_dac1.Init.PeriphInc = DMA_PINC_DISABLE;
-  hdma_dac1.Init.MemInc = DMA_MINC_ENABLE;
-  hdma_dac1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
-  hdma_dac1.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-  hdma_dac1.Init.Mode = DMA_CIRCULAR;
-  hdma_dac1.Init.Priority = DMA_PRIORITY_HIGH;
-  hdma_dac1.Init.FIFOMode = DMA_FIFOMODE_DISABLE;         
-  hdma_dac1.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_HALFFULL;
-  hdma_dac1.Init.MemBurst = DMA_MBURST_SINGLE;
-  hdma_dac1.Init.PeriphBurst = DMA_PBURST_SINGLE; 
+  dmaDAC_handle.Init.Channel  = DAC_DMA_CHANNEL1;
+  dmaDAC_handle.Init.Direction = DMA_MEMORY_TO_PERIPH;
+  dmaDAC_handle.Init.PeriphInc = DMA_PINC_DISABLE;
+  dmaDAC_handle.Init.MemInc = DMA_MINC_ENABLE;
+  dmaDAC_handle.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+  dmaDAC_handle.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+  dmaDAC_handle.Init.Mode = DMA_CIRCULAR;
+  dmaDAC_handle.Init.Priority = DMA_PRIORITY_HIGH;
+  dmaDAC_handle.Init.FIFOMode = DMA_FIFOMODE_DISABLE;         
+  dmaDAC_handle.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_HALFFULL;
+  dmaDAC_handle.Init.MemBurst = DMA_MBURST_SINGLE;
+  dmaDAC_handle.Init.PeriphBurst = DMA_PBURST_SINGLE; 
 
-  HAL_DMA_Init(&hdma_dac1);
+  HAL_DMA_Init(&dmaDAC_handle);
     
   /* Associate the initialized DMA handle to the the DAC handle */
-  __HAL_LINKDMA(hdac, DMA_Handle1, hdma_dac1);
+  __HAL_LINKDMA(hdac, DMA_Handle1, dmaDAC_handle);
 
   /*##-4- Configure the NVIC for DMA #########################################*/
   /* Enable the DMA1 Stream5 IRQ Channel */
   HAL_NVIC_SetPriority(DAC_DMA_IRQn1, 2, 0);
   HAL_NVIC_EnableIRQ(DAC_DMA_IRQn1);
-}
+} // void HAL_DAC_MspInit(DAC_HandleTypeDef* hdac)
  
 //=============================================================================================
 /**
@@ -231,7 +223,7 @@ void HAL_DAC_MspInit(DAC_HandleTypeDef* hdac)
   */
 void HAL_DAC_MspDeInit(DAC_HandleTypeDef* hdac)
 {
-  static DMA_HandleTypeDef  hdma_dac1;
+  static DMA_HandleTypeDef  dmaDAC_handle;
 
   /*##-2- Disable peripherals and GPIO Clocks ################################*/
   /* De-initialize the DAC Channel1 GPIO pin */
@@ -239,8 +231,8 @@ void HAL_DAC_MspDeInit(DAC_HandleTypeDef* hdac)
   
   /*##-3- Disable the DMA Streams ############################################*/
   /* De-Initialize the DMA Stream associate to Channel1 */
-  hdma_dac1.Instance = DAC_DMA_STREAM1;
-  HAL_DMA_DeInit(&hdma_dac1);
+  dmaDAC_handle.Instance = DAC_DMA_STREAM1;
+  HAL_DMA_DeInit(&dmaDAC_handle);
     
   /*##-4- Disable the NVIC for DMA ###########################################*/
   HAL_NVIC_DisableIRQ(DAC_DMA_IRQn1);
