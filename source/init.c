@@ -6,6 +6,8 @@ void init(void)
 	SystemClock_Config();
 	HAL_Init();
 	led_init();
+	usart_init(USART2, 115200, GPIOA , GPIO_PIN_2 , GPIO_PIN_3);
+	adc_init(ADC1, GPIOA , GPIO_PIN_1 , ADC_CHANNEL_1 );
 }
 
 
