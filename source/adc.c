@@ -19,7 +19,7 @@ GPIO_InitTypeDef GPIO_Init_Str;
 
 //TYPEdef's and Handle's for ADC
 ADC_ChannelConfTypeDef ADC_Channel_Str;
-ADC_HandleTypeDef ADC_Init;
+ADC_HandleTypeDef ADC_handle;
 
 /* ==================================================================================================================================
 
@@ -55,17 +55,17 @@ uint8_t adc_init(ADC_TypeDef *ADCx ,
 		Continous Mode of mesurment
 		Prescaler for ADC Clock = 8
 		*/
-		ADC_Init.Instance = ADCx;
-		ADC_Init.Init.Resolution = ADC_RESOLUTION12b;
-		ADC_Init.Init.ContinuousConvMode = ENABLE;
-		ADC_Init.Init.ScanConvMode = DISABLE;
-		ADC_Init.Init.NbrOfConversion = 1;
-		ADC_Init.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-		ADC_Init.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-		ADC_Init.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV8;  // f ABP2 = 84 MHz / 8 = 10,5 MHz
+		ADC_handle.Instance = ADCx;
+		ADC_handle.Init.Resolution = ADC_RESOLUTION12b;
+		ADC_handle.Init.ContinuousConvMode = ENABLE;
+		ADC_handle.Init.ScanConvMode = DISABLE;
+		ADC_handle.Init.NbrOfConversion = 1;
+		ADC_handle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+		ADC_handle.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+		ADC_handle.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV8;  // f ABP2 = 84 MHz / 8 = 10,5 MHz
 		
 		//ADC INIT
-		adc_status = HAL_ADC_Init(&ADC_Init);
+		adc_status = HAL_ADC_Init(&ADC_handle);
 		
 		//ADC CHANNEL CONFIGURATION
 		ADC_Channel_Str.Channel =	ADC_Channel;
@@ -74,13 +74,13 @@ uint8_t adc_init(ADC_TypeDef *ADCx ,
 		ADC_Channel_Str.Offset = 0;
 		
 		//CHANNEL CONFIGURATION INIT
-		HAL_ADC_ConfigChannel(&ADC_Init,&ADC_Channel_Str);
+		HAL_ADC_ConfigChannel(&ADC_handle,&ADC_Channel_Str);
 		
 		//SET ADC ENABLE
-		__HAL_ADC_ENABLE(&ADC_Init);
+		__HAL_ADC_ENABLE(&ADC_handle);
 		
 		//START FIRST CONVERSATION
-		HAL_ADC_Start(&ADC_Init);	
+		HAL_ADC_Start(&ADC_handle);	
 		
 		return adc_status;
 		
@@ -94,8 +94,8 @@ uint8_t adc_init(ADC_TypeDef *ADCx ,
  */
 uint32_t get_adc_value(void){
 
-		if (HAL_ADC_PollForConversion(&ADC_Init, 100) == HAL_OK)
-		adc_value = HAL_ADC_GetValue(&ADC_Init);
+		if (HAL_ADC_PollForConversion(&ADC_handle, 100) == HAL_OK)
+		adc_value = HAL_ADC_GetValue(&ADC_handle);
 		return adc_value;
 }
 /* ==================================================================================================================================
